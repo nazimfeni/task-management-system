@@ -1,11 +1,10 @@
 <?php
-
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Task;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class BasicTest extends TestCase
 {
@@ -17,9 +16,9 @@ class BasicTest extends TestCase
         $user = User::factory()->create();
 
         $task = Task::create([
-            'title' => 'Test Task for testing',
+            'title'       => 'Test Task for testing',
             'description' => 'Test Description',
-            'created_by' => $user->id,
+            'created_by'  => $user->id,
         ]);
 
         $this->assertDatabaseHas('tasks', [
@@ -36,4 +35,35 @@ class BasicTest extends TestCase
             'title' => null,
         ]);
     }
+
+    public function test_example()
+    {
+        $this->assertTrue(true);
+    }
+
+    public function test_dashboard_page_loads()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/dashboard');
+
+        $response->assertStatus(200);
+    }
+
+    public function test_dashboard_requires_login()
+    {
+        $response = $this->get('/dashboard');
+
+        $response->assertStatus(302); // redirect to login
+    }
+
+    public function test_dashboard_logged_in_user()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/dashboard');
+
+        $response->assertStatus(200);
+    }
+
 }
