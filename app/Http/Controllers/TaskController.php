@@ -30,6 +30,11 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+
         Task::create([
             'title'       => $request->title,
             'description' => $request->description,
@@ -65,6 +70,10 @@ class TaskController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+
         $task = Task::findOrFail($id);
 
         $task->update($request->all());
